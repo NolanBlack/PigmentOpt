@@ -27,18 +27,30 @@ class Game:
         self.x = 0
         self.click_count = 0
         self.update_buckets()
-        self.button_quit = Button(self.screen, POS_BUTTON_QUIT, COLOR_BUTTON, "Quit", dim=DIM_BUTTON_BOX)
-        self.button_new = Button(self.screen, POS_BUTTON_NEW, COLOR_BUTTON, "New Game", dim=DIM_BUTTON_BOX)
-        self.button_mode = Button(self.screen, POS_BUTTON_MODE, COLOR_BUTTON, "Mode Select", dim=DIM_BUTTON_BOX)
-        self.button_palette = Button(self.screen, POS_BUTTON_PALETTE, COLOR_BUTTON, "Change Palette", dim=DIM_BUTTON_BOX)
-        self.button_reset = Button(self.screen, POS_BUTTON_RESET, COLOR_BUTTON, "Reset Palette", dim=DIM_BUTTON_BOX)
-        self.button_next = Button(self.screen, POS_BUTTON_CHECK, COLOR_BUTTON, "Check -->", dim=DIM_BUTTON_BOX)
+        self.button_menu           = Button(self.screen, POS_BUTTON_MENU, COLOR_BUTTON, "Menu", dim             =DIM_BUTTON_BOX)
+        self.button_quit           = Button(self.screen, POS_BUTTON_QUIT, COLOR_BUTTON, "Quit", dim             =DIM_BUTTON_BOX)
+        self.button_new            = Button(self.screen, POS_BUTTON_NEW, COLOR_BUTTON, "New Game", dim          =DIM_BUTTON_BOX)
+        self.button_mode           = Button(self.screen, POS_BUTTON_MODE, COLOR_BUTTON, "Mode Select", dim      =DIM_BUTTON_BOX)
+        self.button_palette        = Button(self.screen, POS_BUTTON_PALETTE, COLOR_BUTTON, "Change Palette", dim=DIM_BUTTON_BOX)
+        self.toggle_menus()
+        self.button_reset = Button(self.screen, POS_BUTTON_RESET, COLOR_BUTTON, "Refill Palette", dim=DIM_BUTTON_BOX)
+        self.button_next = Button(self.screen, POS_BUTTON_CHECK, COLOR_BUTTON, "Done", dim=DIM_BUTTON_BOX)
         self.palette = Palette(self.screen)
         self.levels = Levels(self.current_levels, self.screen, POS_BUTTON_LEVEL, dim=DIM_LEVEL_BOX)
         self.window_summary = WindowSummary(self.screen)
         self.window_confirm = WindowConfirm(self.screen)
         self.window_mode = WindowMode(self.screen, self.mode)
         self.window_palette = WindowPalette(self.screen, self.current_palettte)
+
+    def toggle_menus(self):
+        if self.button_quit.active:
+            toggle = False
+        else:
+            toggle = True
+        self.button_quit.active    = toggle
+        self.button_new.active     = toggle
+        self.button_mode.active    = toggle
+        self.button_palette.active = toggle
 
     def reset(self):
         for bucket in self.buckets:
@@ -94,7 +106,9 @@ class Game:
                 self.done = True
 
             # buttons and menus
-            if self.button_new.handle_event(event):
+            if self.button_menu.handle_event(event):
+                self.toggle_menus()
+            elif self.button_new.handle_event(event):
                 self.window_confirm.is_active = True
                 self.run_window(self.window_confirm)
                 if self.window_confirm.is_yes:
@@ -138,6 +152,7 @@ class Game:
         # render sprites
         self.palette.draw(self.screen)
         self.buckets.draw(self.screen)
+        self.button_menu.draw(self.screen)
         self.button_quit.draw(self.screen)
         self.button_new.draw(self.screen)
         self.button_mode.draw(self.screen)

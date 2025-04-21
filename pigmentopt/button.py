@@ -23,15 +23,16 @@ class Button(pg.sprite.Sprite):
 
     def handle_event(self, event):
         """Handle events that get passed from the event loop."""
-        if event.type == pg.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                if self.rect.collidepoint(event.pos):
-                    # do something on click
-                    pass
-        elif event.type == pg.MOUSEBUTTONUP:
-            if event.button == 1:
-                if self.rect.collidepoint(event.pos):
-                    return True
+        if self.active:
+            if event.type == pg.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if self.rect.collidepoint(event.pos):
+                        # do something on click
+                        pass
+            elif event.type == pg.MOUSEBUTTONUP:
+                if event.button == 1:
+                    if self.rect.collidepoint(event.pos):
+                        return True
         return False
 
 
